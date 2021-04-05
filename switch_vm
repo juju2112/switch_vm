@@ -1,0 +1,18 @@
+#!/bin/bash
+# Taken from:
+#   https://markandruth.co.uk/2016/12/14/easily-switch-between-kvm-and-virtualbox-virtual-machines
+set -x
+
+VM=$1
+
+if [ "$VM" = "kvm" ]; then
+    sudo rmmod vboxpci vboxnetflt vboxnetadp vboxdrv
+    sudo modprobe kvm_intel
+fi
+
+if [ "$VM" = "virtualbox" ]; then
+    sudo rmmod kvm_intel kvm
+    for i in vboxdrv vboxpci vboxnetflt vboxnetadp; do
+        sudo modprobe $i
+    done
+fi
